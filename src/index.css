@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@font-face {
+    font-family: sora;
+    src: url(/public/Sora-VariableFont_wght.ttf);
+}
+*{
+    font-family: sora ;
+}
+
+.home{
+    background-color: #0e072044;
+}
+
+.home-part1 .h1{
+    background-image: linear-gradient(135deg, white, lightgreen, darkblue);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+.section2 .btn1 {
+    background-image: linear-gradient(135deg, #F97515, #A63F93, #5E10FF);
+
+}
+.box{
+  background-image:    linear-gradient(#0E0720, #231C33)
+}
+.section4 h1{
+    background-image: linear-gradient(135deg, white, lightgreen, darkblue);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+
+}
+.footer{
+    background-image: linear-gradient(135deg, white, lightgreen, darkblue);
+
+}
