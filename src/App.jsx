@@ -4,13 +4,14 @@ import FluidBackground from './Components/FluidBackground'
 
 function App() {
   return (
-    <>
-     <FluidBackground/>
-     <div style={{ position: 'relative', zIndex: 99  }}>
+    <div className='relative  w-full h-fit'>
+      <div className='w-full fixed overflow-hidden'> <FluidBackground/></div>
+    
+     <div className='absolute w-full top-0 overflow-hidden' >
        <Home/>
 
       </div>
-    </>
+    </div>
   )
 }
 

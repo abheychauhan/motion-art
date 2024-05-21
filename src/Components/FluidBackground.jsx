@@ -1,11 +1,8 @@
-import React, { useRef, useEffect } from 'react';
-import { gsap } from 'gsap';
-import { createNoise2D } from 'simplex-noise';
-import { clamp } from 'lodash';
+// src/SmokeBackground.js
+import React, { useEffect, useRef } from 'react';
 
-function FluidBackground() {
+const FluidBackground = () => {
   const canvasRef = useRef(null);
-  const mouse = useRef({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -13,78 +10,71 @@ function FluidBackground() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const noise2D = createNoise2D();
-    const noiseScale = 1;
-    const particleCount = 500;
-    const particles = Array.from({ length: particleCount }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      vx: 0,
-      vy: 0,
-      color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-    }));
+    let particlesArray = [];
+    let hue = 0;
 
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => {
-        const angle = noise2D(p.x * noiseScale, p.y * noiseScale) * Math.PI * 6;
-        p.vx += Math.cos(angle) * 0.5;
-        p.vy += Math.sin(angle) * 0.5;
-
-        const dx = p.x - mouse.current.x;
-        const dy = p.y - mouse.current.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const forceDirectionX = dx / dist;
-        const forceDirectionY = dy / dist;
-        const maxDist = 150;
-        const force = (maxDist - dist) / maxDist;
-
-        if (dist < maxDist) {
-          p.vx -= forceDirectionX * force * 10;
-          p.vy -= forceDirectionY * force * 10;
-        }
-
-        p.vx *= 0.95;
-        p.vy *= 0.95;
-
-        p.x = clamp(p.x + p.vx, 0, canvas.width);
-        p.y = clamp(p.y + p.vy, 0, canvas.height);
-
-        ctx.fillStyle = p.color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-        ctx.fill();
-      });
+    const mouse = {
+      x: undefined,
+      y: undefined,
     };
 
-    const animate = () => {
-      draw();
-      requestAnimationFrame(animate);
-    };
-
-    const handleMouseMove = (event) => {
-      gsap.to(mouse.current, {
-        duration: 0.5,
-        x: event.clientX,
-        y: event.clientY,
-      });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    window.addEventListener('mousemove', (event) => {
+      mouse.x = event.x;
+      mouse.y = event.y;
     });
+
+    class Particle {
+      constructor() {
+        this.x = mouse.x;
+        this.y = mouse.y;
+        this.size = Math.random() * 50 + 1;
+        this.speedX = Math.random() * 3 - 1.5;
+        this.speedY = Math.random() * 3 - 1.5;
+        this.color = `hsl(${hue}, 100%, 50%)`;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.size > 0.2) this.size -= 0.1;
+      }
+      draw() {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function handleParticles() {
+      for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+        particlesArray[i].draw();
+        if (particlesArray[i].size <= 0.2) {
+          particlesArray.splice(i, 1);
+          i--;
+        }
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      handleParticles();
+      hue += 2;
+      requestAnimationFrame(animate);
+    }
 
     animate();
 
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
+    setInterval(() => {
+      particlesArray.push(new Particle());
+      if (particlesArray.length > 200) {
+        particlesArray.splice(0, 1);
+      }
+    }, 100);
+
   }, []);
 
-  return <canvas ref={canvasRef} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1, background: '#000' }}></canvas>;
+  return <canvas ref={canvasRef} />;
 };
-
-
-export default FluidBackground
+export default FluidBackground;
+ 
