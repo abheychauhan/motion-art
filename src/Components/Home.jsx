@@ -1,7 +1,6 @@
 import React, { useRef } from 'react'
 import Nav from './partials/Nav'
 import Footer from './partials/Footer'
-import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -11,36 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 function Home() {
   
     
-    useGSAP(()=>{
-        
-        var tl = gsap.timeline();
-
-        tl.from('.text1' , {
-            x:-500,
-            duration:.6,
-            stagger:1,
-            delay:.5,
-            
-        })
-        .from('.text2',{
-            x:1000,
-            duration:.5,
-            stagger:1,
-            
-            
-        })
-        .from('.text3',{
-            x:-1000,
-            duration:.5,
-            
-            
-            
-        })
-
-     });
-
    
-
 
 
   return (

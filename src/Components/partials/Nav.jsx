@@ -1,30 +1,10 @@
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
+
 import React from 'react'
 
 function Nav() {
 
 
-  useGSAP(()=>{
-
-    var tl = gsap.timeline();
-
-    tl.from('.img',{
-         y:-100,
-         duration:.3,
-         stagger:1
-         
-
-    })
-    .from('.btn',{
-      y:-100,
-      duration:.3,
-      
-
-    })
   
-
-  })
 
   
 
